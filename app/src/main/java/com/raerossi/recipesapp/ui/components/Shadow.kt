@@ -23,9 +23,9 @@ fun Modifier.smallShadow(): Modifier {
     )
 }
 
-fun Modifier.mediumShadow(): Modifier {
+fun Modifier.mediumShadow(color: Color): Modifier {
     return this.shadow(
-        color = Color.White,
+        color = color,
         alpha = 0.15f,
         blurRadius = 48.dp,
         offsetY = 32.dp,
@@ -33,10 +33,10 @@ fun Modifier.mediumShadow(): Modifier {
     )
 }
 
-fun Modifier.largeShadow(): Modifier {
+fun Modifier.largeShadow(color: Color): Modifier {
     return this.shadow(
-        color = Color.White,
-        alpha = 0.15f,
+        color = color,
+        alpha = 0.25f,
         blurRadius = 56.dp,
         offsetY = 48.dp,
         spread = 25f.dp

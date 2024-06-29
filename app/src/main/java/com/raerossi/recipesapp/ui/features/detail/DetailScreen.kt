@@ -1,6 +1,7 @@
 package com.raerossi.recipesapp.ui.features.detail
 
 import android.app.Activity
+import android.graphics.drawable.Drawable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -30,6 +31,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -51,6 +55,8 @@ import com.raerossi.recipesapp.domain.model.Ingredient
 import com.raerossi.recipesapp.domain.model.Recipe
 import com.raerossi.recipesapp.ui.components.ErrorDialog
 import com.raerossi.recipesapp.ui.components.LoadingScreen
+import com.raerossi.recipesapp.ui.components.largeShadow
+import com.raerossi.recipesapp.ui.components.mediumShadow
 import com.raerossi.recipesapp.ui.components.smallShadow
 import com.raerossi.recipesapp.ui.features.home.HomeUiState
 import com.raerossi.recipesapp.ui.features.home.RecipeItem
@@ -64,12 +70,20 @@ fun DetailScreen(viewModel: DetailViewModel, onBackClick: () -> Unit) {
     val recipe by viewModel.recipe.observeAsState(Recipe())
     val uiState by viewModel.uiState.collectAsState(DetailUiState())
 
+    var backgroundColor by remember { mutableStateOf(Color(0xFFFCFCFC)) }
+
     DetailScreen(
         recipe = recipe,
         uiState = uiState,
+        backgroundColor = backgroundColor,
         callbacks = DetailCallbacks(
             onBackClick = { onBackClick() },
-            onErrorDialogClick = { /*TODO*/ }
+            onErrorDialogClick = { },
+            onSetBackgroundColor = {
+                viewModel.getBackgroundColor(it) { color ->
+                    backgroundColor = color
+                }
+            }
         )
     )
 }
@@ -78,6 +92,7 @@ fun DetailScreen(viewModel: DetailViewModel, onBackClick: () -> Unit) {
 fun DetailScreen(
     recipe: Recipe?,
     uiState: DetailUiState,
+    backgroundColor: Color,
     callbacks: DetailCallbacks
 ) {
     if (uiState.isLoading) {
@@ -91,7 +106,9 @@ fun DetailScreen(
         } else {
             DetailContent(
                 recipe = recipe,
-                onBackClick = { callbacks.onBackClick() }
+                onBackClick = { callbacks.onBackClick() },
+                backgroundColor = backgroundColor,
+                onSetBackgroundColor = { callbacks.onSetBackgroundColor(it) },
             )
         }
     }
@@ -100,7 +117,9 @@ fun DetailScreen(
 @Composable
 fun DetailContent(
     recipe: Recipe?,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    backgroundColor: Color,
+    onSetBackgroundColor: (Drawable) -> Unit
 ) {
     Scaffold(topBar = {
         if (recipe != null) {
@@ -116,7 +135,9 @@ fun DetailContent(
             ImageAndTimeRecipe(
                 imageUrl = recipe?.imageUrl ?: "",
                 time = recipe?.time ?: "",
-                stars = recipe?.stars ?: 0.0
+                stars = recipe?.stars ?: 0.0,
+                backgroundColor = backgroundColor,
+                onSetBackgroundColor = { onSetBackgroundColor(it) }
             )
             Spacer(modifier = Modifier.height(16.dp))
             DetailInformation(
@@ -129,7 +150,13 @@ fun DetailContent(
 }
 
 @Composable
-fun ImageAndTimeRecipe(imageUrl: String, time: String, stars:Double) {
+fun ImageAndTimeRecipe(
+    imageUrl: String,
+    time: String,
+    stars: Double,
+    backgroundColor: Color,
+    onSetBackgroundColor: (Drawable) -> Unit
+) {
     Column(
         Modifier
             .padding(horizontal = 16.dp)
@@ -140,6 +167,7 @@ fun ImageAndTimeRecipe(imageUrl: String, time: String, stars:Double) {
     ) {
         AsyncImage(
             modifier = Modifier
+                .mediumShadow(backgroundColor)
                 .fillMaxWidth()
                 .background(Color.Transparent)
                 .height(270.dp)
@@ -150,7 +178,11 @@ fun ImageAndTimeRecipe(imageUrl: String, time: String, stars:Double) {
                 .crossfade(true)
                 .build(),
             contentScale = ContentScale.Crop,
-            contentDescription = "recipe image"
+            contentDescription = "recipe image",
+            onSuccess = {
+                val drawable = it.result.drawable
+                onSetBackgroundColor(drawable)
+            }
         )
         Spacer(modifier = Modifier.height(8.dp))
         Row(
@@ -241,7 +273,7 @@ fun ListIngredients(ingredients: List<Ingredient>) {
 fun IngredientItem(ingredient: Ingredient) {
     Text(
         modifier = Modifier.fillMaxWidth(),
-        text =  "- ${ingredient.name} ${ingredient.quantity}",
+        text = "- ${ingredient.name} ${ingredient.quantity}",
         style = MaterialTheme.typography.bodyMedium,
         color = Color(0xFF1A1C1D)
     )
