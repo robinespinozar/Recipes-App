@@ -35,7 +35,7 @@ class HomeViewModel @Inject constructor(
             try {
                 _recipes.value = getRecipesUseCase()
             } catch (e: Exception) {
-                _uiState.update { it.copy(showErrorDialog = true , messageError = e.message.toString()) }
+                _uiState.update { it.copy(showErrorDialog = true , messageError = "Please, verify your internet connection.") }
             } finally {
                 _uiState.update { it.copy(isLoading = false) }
             }

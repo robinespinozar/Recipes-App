@@ -64,6 +64,7 @@ fun WelcomeContent(modifier: Modifier = Modifier) {
             title = "Welcome to Recipes!",
             description = "Discover delicious recipes, from quick meals to gourmet dishes. Explore, cook, and enjoy your culinary journey with us. Happy cooking!"
         )
+        Spacer(modifier = Modifier.height(48.dp))
     }
 }
 
