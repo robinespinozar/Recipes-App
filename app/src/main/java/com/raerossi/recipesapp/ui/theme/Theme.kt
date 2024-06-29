@@ -11,6 +11,7 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
@@ -35,6 +36,16 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
+val ColorScheme.loading: Color @Composable get() = md_loading
+val ColorScheme.title: Color @Composable get() = md_title
+val ColorScheme.primaryGradient: Brush @Composable get() = md_primary_gradient
+val ColorScheme.searchBarContainer: Color @Composable get() = md_surface_containerHighest
+val ColorScheme.onSearchBarContainer: Color @Composable get() = md_theme_ref_primary50
+val ColorScheme.neutralVariant30: Color @Composable get() = md_theme_ref_neutralVariant30
+val ColorScheme.primary40: Color @Composable get() = md_theme_ref_primary40
+val ColorScheme.primary50: Color @Composable get() = md_theme_ref_primary50
+val ColorScheme.primary60: Color @Composable get() = md_theme_ref_primary60
+val ColorScheme.description_light: Color @Composable get() = md_theme_ref_description
 val ColorScheme.backgroundGradient: Brush @Composable get() = md_background_gradient
 
 @Composable

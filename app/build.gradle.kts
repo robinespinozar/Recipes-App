@@ -76,9 +76,10 @@ dependencies {
     implementation("androidx.activity:activity-ktx:1.9.0")
     implementation("androidx.datastore:datastore-core-android:1.1.1")
     implementation("androidx.compose.runtime:runtime-livedata:1.6.7")
+    implementation("androidx.palette:palette-ktx:1.0.0")
     kapt("com.google.dagger:hilt-compiler:2.46.1")
     kapt("androidx.hilt:hilt-compiler:1.0.0")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0") //1.0.0
 
     //Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")

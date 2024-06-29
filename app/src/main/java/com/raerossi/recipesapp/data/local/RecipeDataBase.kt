@@ -7,8 +7,12 @@ import com.raerossi.recipesapp.data.local.dao.RecipeDao
 import com.raerossi.recipesapp.data.local.entities.IngredientEntity
 import com.raerossi.recipesapp.data.local.entities.RecipeEntity
 
-@Database(entities = [RecipeEntity::class, IngredientEntity::class], version = 1, exportSchema = false)
-abstract class RecipeDataBase : RoomDatabase(){
+@Database(
+    entities = [RecipeEntity::class, IngredientEntity::class],
+    version = 2,
+    exportSchema = false
+)
+abstract class RecipeDataBase : RoomDatabase() {
 
     abstract fun getRecipeDao(): RecipeDao
     abstract fun getIngredientDao(): IngredientDao
