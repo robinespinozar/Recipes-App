@@ -19,4 +19,7 @@ interface IngredientDao {
 
     @Query("Select * from " + Tables.INGREDIENT + " where idRecipe =:idRecipe")
     suspend fun getIngredientsByRecipe(idRecipe: Int): List<IngredientEntity>
+
+    @Query("Select * from " + Tables.INGREDIENT + " where name like '%' || :filterValue || '%'")
+    suspend fun getIngredientsByFilter(filterValue: String): List<IngredientEntity>
 }

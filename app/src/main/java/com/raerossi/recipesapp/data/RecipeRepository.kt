@@ -45,10 +45,19 @@ class RecipeRepository @Inject constructor(
     }
 
     suspend fun getFilteredRecipes(filterValue: String): List<Recipe> {
-        val recipes = recipeDao.getFilteredRecipes(filterValue).map { it.toDomain() }
+        val recipes = recipeDao.getFilteredRecipes(filterValue).map { it.toDomain() }.toMutableList()
         recipes.forEach { recipe ->
             recipe.ingredients = ingredientDao.getIngredientsByRecipe(recipe.id).map { it.toDomain() }
         }
+
+        val ingredients = ingredientDao.getIngredientsByFilter(filterValue)
+        ingredients.forEach { ingredient ->
+            val recipe = getRecipeById(ingredient.idRecipe)
+            if (recipe !in recipes) {
+                recipes.add(recipe)
+            }
+        }
+
         return recipes
     }
 }

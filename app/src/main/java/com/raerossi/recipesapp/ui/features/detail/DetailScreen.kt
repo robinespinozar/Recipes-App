@@ -115,7 +115,8 @@ fun DetailContent(
             Spacer(modifier = Modifier.height(16.dp))
             ImageAndTimeRecipe(
                 imageUrl = recipe?.imageUrl ?: "",
-                time = recipe?.time ?: ""
+                time = recipe?.time ?: "",
+                stars = recipe?.stars ?: 0.0
             )
             Spacer(modifier = Modifier.height(16.dp))
             DetailInformation(
@@ -128,7 +129,7 @@ fun DetailContent(
 }
 
 @Composable
-fun ImageAndTimeRecipe(imageUrl: String, time: String) {
+fun ImageAndTimeRecipe(imageUrl: String, time: String, stars:Double) {
     Column(
         Modifier
             .padding(horizontal = 16.dp)
@@ -161,9 +162,23 @@ fun ImageAndTimeRecipe(imageUrl: String, time: String) {
                 contentDescription = "clock",
                 tint = MaterialTheme.colorScheme.description_light
             )
-            Spacer(modifier = Modifier.width(4.dp))
+            Spacer(modifier = Modifier.width(12.dp))
             Text(
                 text = time,
+                color = MaterialTheme.colorScheme.description_light,
+                style = MaterialTheme.typography.titleSmall
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            IconButton(onClick = { }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_favorite_star_filled),
+                    contentDescription = "favorite button",
+                    tint = Color.Unspecified
+                )
+            }
+            Text(
+                modifier = Modifier.padding(),
+                text = stars.toString(),
                 color = MaterialTheme.colorScheme.description_light,
                 style = MaterialTheme.typography.titleSmall
             )
