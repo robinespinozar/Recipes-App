@@ -19,4 +19,7 @@ interface RecipeDao {
 
     @Query("Select * from " + Tables.RECIPE + " where idRecipe =:idRecipe")
     suspend fun getRecipeById(idRecipe: Int): RecipeEntity
+
+    @Query("Select * from " + Tables.RECIPE + " where lower(name) like '%' || :name || '%'")
+    suspend fun getFilteredRecipes(name: String): List<RecipeEntity>
 }

@@ -44,11 +44,11 @@ class RecipeRepository @Inject constructor(
         return recipe
     }
 
-  //  suspend fun getFilteredRecipes(filterValue: String): List<Recipe> {
-       // val recipes = recipeDao.getFilteredRecipes(filterValue).map { it.toDomain() }
-       // recipes.forEach { recipe ->
-       //     recipe.ingredients = ingredientDao.getIngredientsByRecipe(recipe.id).map { it.toDomain() }
-       // }
-       // return recipes
-  //  }
+    suspend fun getFilteredRecipes(filterValue: String): List<Recipe> {
+        val recipes = recipeDao.getFilteredRecipes(filterValue).map { it.toDomain() }
+        recipes.forEach { recipe ->
+            recipe.ingredients = ingredientDao.getIngredientsByRecipe(recipe.id).map { it.toDomain() }
+        }
+        return recipes
+    }
 }

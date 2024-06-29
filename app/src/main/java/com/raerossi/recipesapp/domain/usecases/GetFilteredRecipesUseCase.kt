@@ -6,5 +6,5 @@ import javax.inject.Inject
 class GetFilteredRecipesUseCase @Inject constructor(
     private val repository: RecipeRepository
 ){
-   // suspend operator fun invoke(filterValue: String) = repository.getFilteredRecipes(filterValue)
+    suspend operator fun invoke(filterValue: String) = repository.getFilteredRecipes(filterValue)
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.raerossi.recipesapp.domain.model.Recipe
+import com.raerossi.recipesapp.domain.usecases.GetFilteredRecipesUseCase
 import com.raerossi.recipesapp.domain.usecases.GetRecipesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getRecipesUseCase: GetRecipesUseCase
+    private val getRecipesUseCase: GetRecipesUseCase,
+    private val getFilteredRecipesUseCase: GetFilteredRecipesUseCase
 ) : ViewModel() {
 
     private val _filterValue = MutableLiveData<String>()
@@ -40,12 +42,12 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun getFilterRecipes(filterValue: String) {
+    fun getFilteredRecipes(filterValue: String) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             try {
                 _filterValue.value = filterValue
-               // _recipes.value = getFilteredRecipesUseCase(filterValue.trim())
+                _recipes.value = getFilteredRecipesUseCase(filterValue.trim())
             } catch (e: Exception) {
                 _uiState.update { it.copy(showErrorDialog = true , messageError = e.message.toString()) }
             } finally {

@@ -68,7 +68,7 @@ fun HomeScreen(
         callbacks = HomeCallbacks(
             onRecipeClick = { onRecipeClick(it) },
             onErrorDialogClick = { viewModel.hideErrorDialog() },
-            onSearchTextChanged = { viewModel.getFilterRecipes(it) }
+            onSearchTextChanged = { viewModel.getFilteredRecipes(it) }
         )
     )
 }
@@ -80,21 +80,30 @@ fun HomeScreen(
     uiState: HomeUiState,
     callbacks: HomeCallbacks
 ) {
-    if (uiState.isLoading) {
-        LoadingScreen()
-    } else {
-        if (uiState.showErrorDialog) {
-            ErrorDialog(
-                message = uiState.messageError,
-                onDissmis = { callbacks.onErrorDialogClick() }
-            )
-        } else {
-            HomeContent(
-                filterValue = filterValue,
-                recipes = recipes,
-                onRecipeClick = { callbacks.onRecipeClick(it) },
-                onSearchTextChanged = { callbacks.onSearchTextChanged(it) }
-            )
+    Scaffold(
+        topBar = { CustomTopBar("Discover Recipes!") },
+    ) {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .padding(it)
+        ) {
+            SearchBar(filterValue = filterValue) { callbacks.onSearchTextChanged(it) }
+            if (uiState.isLoading) {
+                LoadingScreen()
+            } else {
+                if (uiState.showErrorDialog) {
+                    ErrorDialog(
+                        message = uiState.messageError,
+                        onDissmis = { callbacks.onErrorDialogClick() }
+                    )
+                } else {
+                    HomeContent(
+                        recipes = recipes,
+                        onRecipeClick = { callbacks.onRecipeClick(it) }
+                    )
+                }
+            }
         }
     }
 }
@@ -102,50 +111,23 @@ fun HomeScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeContent(
-    filterValue: String,
     recipes: List<Recipe>,
-    onRecipeClick: (Recipe) -> Unit,
-    onSearchTextChanged: (String) -> Unit
+    onRecipeClick: (Recipe) -> Unit
 ) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                modifier = Modifier.smallShadow(),
-                colors = topAppBarColors(
-                    containerColor = Color(0xFFFCFCFC),
-                    titleContentColor = MaterialTheme.colorScheme.title,
-                ),
-                title = {
-                    Text(
-                        modifier = Modifier.padding(),
-                        text = "Discover Recipes!",
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                }
-            )
-        },
+    Spacer(modifier = Modifier.height(16.dp))
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            Modifier
-                .fillMaxSize()
-                .padding(it),
-        ) {
-            SearchBar(filterValue = filterValue) { onSearchTextChanged(it) }
-            Spacer(modifier = Modifier.height(16.dp))
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                items(recipes) { recipe ->
-                    RecipeItem(recipe) { onRecipeClick(it) }
-                }
-            }
+        items(recipes) { recipe ->
+            RecipeItem(recipe) { onRecipeClick(it) }
         }
     }
 }
+
 
 @Composable
 fun RecipeItem(recipe: Recipe, onClick: (Recipe) -> Unit) {
@@ -161,6 +143,25 @@ fun RecipeItem(recipe: Recipe, onClick: (Recipe) -> Unit) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CustomTopBar(title: String) {
+    TopAppBar(
+        modifier = Modifier.smallShadow(),
+        colors = topAppBarColors(
+            containerColor = Color(0xFFFCFCFC),
+            titleContentColor = MaterialTheme.colorScheme.title,
+        ),
+        title = {
+            Text(
+                modifier = Modifier.padding(),
+                text = title,
+                style = MaterialTheme.typography.titleLarge
+            )
+        }
+    )
+}
+
 @Composable
 fun CardContent(
     modifier: Modifier = Modifier,
@@ -173,7 +174,7 @@ fun CardContent(
     )
     Box(
         modifier = modifier
-            .background(Color( 0XFFF0F0EA))
+            .background(Color(0XFFF0F0EA))
     ) {
         Image(
             painter = painter,
