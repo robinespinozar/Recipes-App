@@ -11,6 +11,6 @@ data class IngredientEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id") val id: Int = 0,
     @ColumnInfo(name = "idRecipe") val idRecipe: Int,
-    @ColumnInfo(name = "name") val name: String?,
+    @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "quantity") val quantity: String
 )
